@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% block content %}
+<div class="container mt-5">
+    <ul class="list-group">
+        <li class="list-group-item active">
+            <h3>{{ assignment.title }}</h3>
+            <p>{{ assignment.description }}</p>
+            <hr>
+            <button type="button" data-toggle="modal" data-target="#delete"
+                class="float-right btn btn-danger btn-sm">&#9872
+                Delete</button>
+            <a href="{% url 'update-assignment' assignment.slug %}" class="float-right btn btn-warning btn-sm">Edit</a>
+            <p><b>Date - </b>{{ assignment.date }}</p>
+            <p><b>Total Marks - </b>{{ assignment.slug|total_marks }}</p>
+            <a href="{% url 'response' assignment.slug %}" class="float-right btn btn-dark btn-sm">
+                Responses <span class="badge bg-danger">{{ assignment.slug|total_responses }}</span></a>
+            <div class="input-group">
+                <input class="form-control col-2" type="text" value="{{ assignment.slug }}" id="result_id">
+                <button class="input-group-text" onclick="copyfunction()" data-bs-toggle="tooltip"
+                    data-bs-placement="top" title="Copied the Result ID">Copy ID</button>
+            </div>
+        </li>
+        {% for question in questions %}
+        <li class="list-group-item list-group-item-info">
+            <p class="float-right"><b>Answer - {{ question.answer }}<br>Marks - {{ question.marks }}</b></p>
+            <b>{{ forloop.counter }}. {{ question.title }}</b>
+            <ol style="list-style-type: upper-alpha;">
+                <li>{{ question.option_1 }}</li>
+                <li>{{ question.option_2 }}</li>
+                <li>{{ question.option_3 }}</li>
+                <li>{{ question.option_4 }}</li>
+            </ol>
+            <a href="{% url 'delete-mcqs' question.slug %}" class="float-right btn btn-danger btn-sm">Delete</a>
+            <a href="{% url 'update-mcqs' question.slug %}" class="float-right btn btn-warning btn-sm">Edit</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="card bg-light my-4">
+        <h3 class="card-header">Add new question</h3>
+        <div class="card-body">
+            <form method="POST">{% csrf_token %}
+                <div class="input-group my-3">
+                    <input name="title" type="text" class="form-control" placeholder="Question"
+                        aria-describedby="basic-title">
+                    <span class="input-group-text" id="basic-title">Question Title</span>
+                </div>
+                <ol style="list-style-type: upper-alpha;">
+                    <li>
+                        <div class=" input-group my-3">
+                            <input name="option_1" type="text" class="form-control" aria-describedby="basic-title">
+                            <span class="input-group-text" id="basic-title">Option 1</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="input-group my-3">
+                            <input name="option_2" type="text" class="form-control" aria-describedby="basic-title">
+                            <span class="input-group-text" id="basic-title">Option 2</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="input-group my-3">
+                            <input name="option_3" type="text" class="form-control" aria-describedby="basic-title">
+                            <span class="input-group-text" id="basic-title">Option 3</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="input-group my-3">
+                            <input name="option_4" type="text" class="form-control" aria-describedby="basic-title">
+                            <span class="input-group-text" id="basic-title">Option 4</span>
+                        </div>
+                    </li>
+                </ol>
+                <div class="input-group my-3">
+                    <input name="answer" type="text" class="form-control" placeholder="Answer"
+                        aria-describedby="basic-tit le">
+                    <span class="input-group-text" id="basic-title">Correct Answer</span>
+                </div>
+                <div class="input-group my-3">
+                    <input value="1" name="marks" type="number" class="form-control" placeholder="Marks"
+                        aria-describedby="basic-tit le">
+                    <span class="input-group-text" id="basic-title">Question Marks</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary float-right"><b>Save</b></button>
+                <button type="reset" class="btn btn-warning float-right mr-2">Reset</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="delete" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 style="color: red;" class="modal-title" id="staticBackdropLabel1">Are you sure you want to delete
+                    this assignment?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>This will delete all question and other details related to this assignment.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                <a href="{% url 'delete-assignment' assignment.slug %}"
+                    class="float-right btn btn-danger btn-sm"><b>Delete</b></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyfunction() {
+        var copytext = document.getElementById("result_id");
+        copytext.select();
+        copytext.setSelectonRange(0, 99);
+        document.execCommand("copy");
+    }
+</script>
+{% endblock content %}

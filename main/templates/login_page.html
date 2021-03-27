@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+<div class="container mt-5">
+    <ul class="list-group">
+        <li class="list-group-item active">
+            <h3>Log In</h3>
+        </li>
+    </ul>
+    <form method="POST">{% csrf_token %}
+        <fieldset class="form-group">
+            {{ form|crispy }}
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Log In</button>
+            <small class="text-muted ml-2">
+                <a href="">Forgot Password?</a>
+            </small>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% block content %}
+<div class="container mt-5">
+    <ul class="list-group">
+        <li class="list-group-item active">
+        </li>
+    </ul>
+    {% if not qtakers.user.email or not qtakers.user.first_name or not qtakers.user.last_name %}
+    <div class="alert alert-danger mt-2" role="alert">
+        Complete your profile <a data-toggle="modal" data-target="#profile" href="#" class="alert-link">here</a> to see complete result
+    </div>
+    {% endif %}
+    {% if qtakers.slug|obtained_marks == 0 and qtakers.assignment.ass_type == 'LONG' %}
+    <div class="alert alert-info mt-2" role="alert">
+        <b>Note : </b>Marks will be Comeing soon. After your teacher check answer.</p>
+    </div>
+    {% endif %}
+
+    <div class="card bg-light my-4">
+        <div class="card-header">
+            <h2 class="text-center">RESULT</h2>
+            <p class="text-center">{{ qtakers.assignment.title }}</p>
+        </div>
+        <div class="card-body">
+            <p class="float-right">Username : <b>{{ qtakers.user.username }}</b></p>
+            <p>Result ID : <b>{{ qtakers.slug }}</b></p>
+            <p class="float-right">Email : <b>{{ qtakers.user.email }}</b></p>
+            <p>Name : <b>{{ qtakers.user.first_name }} {{ qtakers.user.last_name}}</b></p>
+            <p class="float-right">End Date : <b>{{ qtakers.end_date }}</b></p>
+            <p>Start Date : <b>{{ qtakers.start_date }}</b></p>
+            <hr>
+            <p class="float-right">MAXIMUM OBTAINED : <b>{{ qtakers.slug|obtained_marks }}</b></p>
+            <p>MAXIMUM MARKS : <b>{{ qtakers.assignment.slug|total_marks }}</b></p>
+        </div>
+        <div class="card-footer">
+            <p class="text-center">These Are Computer Generated Marks. It Cannot Be Used As Official Marksheet.
+                 In Case Of Discrepancy Please Contact Us.</p>
+        </div>
+    </div>
+    <div class="input-group">
+    <input class="form-control" type="text" value="{{ qtakers.slug }}" id="result_id">
+    <button class="input-group-text" onclick="copyfunction()" data-bs-toggle="tooltip"
+     data-bs-placement="top" title="Copied the Result ID">Copy ID</button>
+</div>
+</div>
+<script>
+    function copyfunction()
+    {
+        var copytext = document.getElementById("result_id");
+        copytext.select();
+        copytext.setSelectonRange(0,99);
+        document.execCommand("copy");
+    }
+</script>
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <ul class="list-group">
+        <li class="list-group-item active">
+            <h3>Update assignment</h3>
+        </li>
+    </ul>
+
+    <form method="POST">{% csrf_token %}
+        <div class="input-group my-3">
+            <input value="{{ assignment.title }}" name="title" type="text" class="form-control" placeholder="Title" aria-describedby="basic-title">
+            <span class="input-group-text" id="basic-title">Assignment Title</span>
+        </div>
+        <div class="input-group my-3">
+            <textarea name="description" class="form-control" rows="6">{{ assignment.description }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary float-right"><b>Update</b></button>
+        <button type="reset" class="btn btn-warning float-right mr-2">Reset</button>
+    </form>
+</div>
+{% endblock content %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% block content %}
+
+<div class="container mt-5">
+    <ul class="list-group">
+        <li class="list-group-item active">
+            <h3>{{ assignment.title }}</h3>
+            <p>{{ assignment.description }}</p>
+            <hr>
+            <p><b>Total marks - </b>{{ assignment.slug|total_marks }}</p>
+        </li>
+        <form method="POST">{% csrf_token %}
+            {% for question in questions %}
+            <li class="list-group-item list-group-item-info">
+                <b>{{ forloop.counter }}. {{ question.title }}</b>
+                <b class="float-right">[{{ question.marks }}]</b>
+                <br><br>
+                <div class="form-check">
+                    <textarea name="{{ question.slug }}" class="form-control" rows="5" placeholder="Write your answer here"></textarea>
+                </div>
+            </li>
+            {% endfor %}
+            {% if assignment.user == user %}
+            <a href="{% url 'create-question' assignment.slug %}" class="btn btn-primary float-right mt-3"><b>Edit</b></a>
+            {% else %}
+            <button type="submit" class="btn btn-primary float-right mt-3"><b>Submit</b></button>
+            {% endif %}
+            <button type="reset" class="btn btn-warning float-right mt-3 mr-2">Reset</button>
+
+        </form>
+    </ul>
+</div>
+
+{% endblock content %}

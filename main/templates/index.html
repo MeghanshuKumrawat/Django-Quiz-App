@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-3">
+            <div class="card text-white bg-danger">
+                <h4 class="card-header">Information</h4>
+                <div class="card-body">
+                    <p class="card-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Incidunt, ad?</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <a href="{% url 'create-mcq-assignment' %}">
+                <div class="card text-white bg-success">
+                    <h4 class="card-header">MCQ Test</h4>
+                    <div class="card-body">
+                        <p class="card-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Incidunt, ad?</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-3">
+            <a href="{% url 'create-question-assignment' %}">
+                <div class="card text-white bg-warning">
+                    <h4 class="card-header">Q & A Test</h4>
+                    <div class="card-body">
+                        <p class="card-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Incidunt, ad?</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-3">
+            <a href="{% url 'join-test' %}">
+                <div class="card text-white bg-dark">
+                    <h4 class="card-header">Join Test</h4>
+                    <div class="card-body">
+                        <p class="card-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Incidunt, ad?</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-5">
+    <ul class="list-group">
+        <li class="list-group-item active">
+            <h3>Your Quizzes</h3>
+        </li>
+        {% if user.is_authenticated %}
+        {% for assignment in assignments %}
+        <li class="list-group-item list-group-item-info">
+            <h6 style="float: right;">{{ assignment.date }}</h6>
+            <a href="{% url 'create-question' assignment.slug %}">
+                <h5>{{ assignment.title }}</h5>
+            </a>
+            <p>{{ assignment.description }}</p>
+        </li>
+        {% endfor %}
+        {% else %}
+        <li class="list-group-item list-group-item-primary">Reading Books
+            <button type="button" data-toggle="modal" data-target="#login"
+                class="float-right btn btn-danger btn-sm">Delete</button>
+        </li>
+        <li class="list-group-item list-group-item-danger">Complete Assignment
+            <button type="button" data-toggle="modal" data-target="#login"
+                class="float-right btn btn-danger btn-sm">Delete</button>
+        </li>
+        <li class="list-group-item list-group-item-warning">Coding Prectice
+            <button type="button" data-toggle="modal" data-target="#login"
+                class="float-right btn btn-danger btn-sm">Delete</button>
+        </li>
+        <li class="list-group-item list-group-item-secondary">Learn Cooking
+            <button type="button" data-toggle="modal" data-target="#login"
+                class="float-right btn btn-danger btn-sm">Delete</button>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock content %}

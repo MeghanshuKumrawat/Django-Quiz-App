@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% block content %}
+<div class="container mt-5">
+    <ul class="list-group">
+        <li class="list-group-item active">
+            <h3>{{ assignment.title }}</h3>
+            <p>{{ assignment.description }}</p>
+            <hr>
+            <p><b>Date - </b>{{ assignment.date }}</p>
+            <p><b>Total Marks - {{ assignment.slug|total_marks }}</b></p>
+            <a href="" class="float-right btn btn-dark btn-sm">
+                Refresh &#9762</a>
+            <p><b>Total Responses - {{ assignment.slug|total_responses }}</b></p>
+        </li>
+        {% for qtaker, questions, total_correct_answer in zipped_data %}
+        <li class="list-group-item list-group-item-info">
+
+            <p class="float-right"><b>Correct Answer - {{ total_correct_answer }}<br>Marks -
+                    {{ qtaker.slug|obtained_marks }} / {{ assignment.slug|total_marks }}</b></p>
+            <b>{{ forloop.counter }}. {{ qtaker.user.username }}</b>
+            <ol style="list-style-type: upper-alpha;">
+                {% for question in questions %}
+                {% if question.status %}
+                <li><b>{{ question.question.title }}</b><br>Answer : <b>{{ question.answer }} - &#10004</b></li>
+                {% else %}
+                <li><b>{{ question.question.title }}</b><br>Answer : <b>{{ question.answer }} - &#10006</b></li>
+                {% endif %}
+                {% endfor %}
+            </ol>
+            <a href="{% url 'delete-response' qtaker.slug %}" class="float-right btn btn-danger btn-sm">Delete</a>
+            <a data-toggle="modal" data-target="#{{ qtaker.user.username }}"
+                class="float-right btn btn-success btn-sm">Report</a>
+        </li>
+        <!-- Modal -->
+        <div class="modal fade" id="{{ qtaker.user.username }}" data-backdrop="static" data-keyboard="false"
+            tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 style="color: red;" class="modal-title" id="staticBackdropLabel1">Student Mini Report</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% if not qtaker.user.email or not qtaker.user.first_name or not qtaker.user.last_name %}
+                        <div class="alert alert-danger mt-2" role="alert">
+                            Profile is Incomplete
+                        </div>
+                        {% endif %}
+                        <p>Name : <b>{{ qtaker.user.first_name }} {{ qtaker.user.last_name }}</b></p>
+                        <p>Start Date : <b>{{ qtaker.start_date }}</b></p>
+                        <p>End Date : <b>{{ qtaker.end_date }}</b></p>
+                        <p>Email : <b>{{ qtaker.user.email }}</b></p>
+                        <p>Marks : <b>{{ qtaker.slug|obtained_marks }} / {{ assignment.slug|total_marks }}</b></p>
+                        <p>Correct Answer : <b>{{ total_correct_answer }}</b></p>
+                        <p>Result ID : <b>{{ qtaker.slug }}</b></p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                        <a href="{% url 'delete-response' qtaker.slug %}"
+                            class="float-right btn btn-danger btn-sm"><b>Delete</b></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </ul>
+</div>
+
+
+{% endblock content %}
